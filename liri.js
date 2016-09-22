@@ -1,3 +1,4 @@
+
 // Load the fs package to read and write
 var fs = require('fs');
 
@@ -5,11 +6,11 @@ var fs = require('fs');
 var request = require('request');
 
 // Load Twitter package
-var Twitter = require('twitter');
-var keys = require('./keys.js');
+var Twit = require("twitter");
+
 
 // Load Spotify package
-
+var spotify = require('spotify');
 
 // Take two arguments.
 // The first will be the action (i.e. "deposit", "withdraw", etc.)
@@ -21,11 +22,11 @@ var value = process.argv[3];
 // The switch-case will direct which function gets run.
 switch(action){
     case 'my-tweets':
-        twitter();
+        mytweets();
     break;
 
     case 'spotify-this-song':
-        spotify();
+        spotifythissong();
     break;
 
     case 'movie-this':
@@ -37,13 +38,52 @@ switch(action){
     break;
 }
 
-function twitter() {
-	client.get('search/tweets', {q: 'node.js'}, function(error, tweets, response) {
-   console.log(tweets);
-});
+function mytweets() {
 
+    // Require keys.js to load keys for Twitter
+    var twitInfo = require('./keys.js');
 
-function spotify() {
+    var twitter = new Twit(twitInfo);
+
+	var params = {screen_name: 'wolfster1951'};
+    twitter.get('statuses/user_timeline', params, function(error, tweets, response) {
+        if (!error) {
+            console.log(tweets);
+        }
+    });
+}
+
+function spotifythissong() {
+ 
+    console.log(value);
+
+    spotify.search({ type: 'track', query: value }, function(err, data) {
+        if ( err ) {
+            console.log('Error occurred: ' + err);
+            return;
+        }
+ 
+        // Do something with 'data' 
+
+        for (var i=0; i < data.tracks.items.length; i++) {
+            if (data.tracks.items[i].name === value) {
+                for (var a=0; a < data.tracks.items[i].artists.length; a++) {
+                    artists = data.tracks.items[i].artists[a].name;
+                }
+                artists = data.tracks.items[i].artists.name;
+                songName = data.tracks.items[i].name;
+                previewUrl = data.tracks.items[i].preview_url;
+                console.log("----------------------------");
+                console.log("Artist(s):"+artists);
+                console.log("The Song's name: "+songName);
+                console.log("Preview URL: "+previewUrl);
+                console.log("----------------------------");
+            } else if(data.tracks.items[i].name !== value){
+                
+            }
+        }
+        console.log(data);
+    });
 
 }
 

@@ -1,0 +1,28 @@
+{
+  "name": "liri-node-app",
+  "version": "0.1.0",
+  "description": "This is an application smiliar to Siri but will lookup informaiton via node.js command line commands.",
+  "main": "keys.js",
+  "dependencies": {
+    "request": "^2.75.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fullers/liri-node-app.git"
+  },
+  "keywords": [
+    "liri"
+  ],
+  "author": "Shaun Fuller",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fullers/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/fullers/liri-node-app#readme"
+}
