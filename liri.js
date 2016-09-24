@@ -8,7 +8,6 @@ var request = require('request');
 // Load Twitter package
 var Twit = require("twitter");
 
-
 // Load Spotify package
 var spotify = require('spotify');
 
@@ -41,7 +40,9 @@ switch(action){
 function mytweets() {
 
     // Require keys.js to load keys for Twitter
-    var twitInfo = require('./keys.js');
+    var keys = require('./keys.js');
+
+    var twitInfo = keys.twitterKeys;
 
     var twitter = new Twit(twitInfo);
 
@@ -53,44 +54,98 @@ function mytweets() {
     });
 }
 
-function spotifythissong() {
+function spotifythissong(value) {
  
-    console.log(value);
+    if(value == null) {
+
+        value = "The Sign";
+
+    }
 
     spotify.search({ type: 'track', query: value }, function(err, data) {
-        if ( err ) {
+        if (err) {
             console.log('Error occurred: ' + err);
             return;
         }
  
-        // Do something with 'data' 
+        // For loop that checks the tracks object, items array  and then checkes the artists array in the spotify api
+        // Based on the items, it console logs the Artist, Song Name, Preview URL, and Album.
 
         for (var i=0; i < data.tracks.items.length; i++) {
             if (data.tracks.items[i].name === value) {
                 for (var a=0; a < data.tracks.items[i].artists.length; a++) {
                     artists = data.tracks.items[i].artists[a].name;
                 }
-                artists = data.tracks.items[i].artists.name;
                 songName = data.tracks.items[i].name;
                 previewUrl = data.tracks.items[i].preview_url;
+                album = data.tracks.items[i].album.name;
                 console.log("----------------------------");
                 console.log("Artist(s):"+artists);
                 console.log("The Song's name: "+songName);
                 console.log("Preview URL: "+previewUrl);
-                console.log("----------------------------");
+                console.log("Album: "+album);
+                console.log("----------------------------"+'\n');
             } else if(data.tracks.items[i].name !== value){
                 
             }
         }
-        console.log(data);
     });
 
 }
 
 function movieThis() {
 
+ if(value == null) {
+
+        value = "Mr Nobody";
+
+    }
+
+    // Then run a request to the OMDB API with the movie specified
+    request('http://www.omdbapi.com/?t='+value+'&y=&plot=short&tomatoes=true&r=json', function (error, response, body) {
+
+    // If the request is successful (i.e. if the response status code is 200)
+    if (!error && response.statusCode == 200) {
+
+        // Parse the body of the site and recover just the imdbRating
+        // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it). 
+        console.log("----------------------------");
+        console.log("This Movie Information is:");
+        console.log("Title: " + JSON.parse(body)["Title"]);
+        console.log("Year: " + JSON.parse(body)["Year"]);
+        console.log("IMDB Rating: " + JSON.parse(body)["imdbRating"]);
+        console.log("Country where produced: " + JSON.parse(body)["Country"]);
+        console.log("Language: " + JSON.parse(body)["Language"]);
+        console.log("Plot: " + JSON.parse(body)["Plot"]);
+        console.log("Actors: " + JSON.parse(body)["Actors"]);
+        console.log("Rotten Tomatoes:");
+        console.log("Ratings: "+JSON.parse(body)["tomatoRating"]);
+        console.log("URL: "+JSON.parse(body)["tomatoURL"]);
+        console.log("----------------------------");
+    }
+});
+
 }
 
 function doWhatItSays() {
 
+        fs.readFile("random.txt", "utf8", function(err,data){
+    
+        // Break the string down by comma separation and store the contents into the output array.
+        var output = data.split(',');
+
+        // Loop Through the newly created output array 
+        for (var i=0; i<output.length; i++){
+
+        // Print each element (item) of the array/ 
+        //console.log(output[i]);
+
+        action = output[0];
+        value = output[1];
+
+        return action;
+        return value;
+        
+        }
+       });   
 }
