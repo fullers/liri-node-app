@@ -17,6 +17,8 @@ var spotify = require('spotify');
 var action = process.argv[2];
 var value = process.argv[3];
 
+var temp = [];
+
 // We will then create a switch-case statement (if-then would also work).
 // The switch-case will direct which function gets run.
 switch(action){
@@ -25,7 +27,7 @@ switch(action){
     break;
 
     case 'spotify-this-song':
-        spotifythissong();
+        spotifythissong(value);
     break;
 
     case 'movie-this':
@@ -54,15 +56,15 @@ function mytweets() {
     });
 }
 
-function spotifythissong(value) {
+function spotifythissong(song) {
  
-    if(value == null) {
+    if(song == null) {
 
-        value = "The Sign";
+        song = "The Sign";
 
     }
 
-    spotify.search({ type: 'track', query: value }, function(err, data) {
+    spotify.search({ type: 'track', query: song }, function(err, data) {
         if (err) {
             console.log('Error occurred: ' + err);
             return;
@@ -72,7 +74,7 @@ function spotifythissong(value) {
         // Based on the items, it console logs the Artist, Song Name, Preview URL, and Album.
 
         for (var i=0; i < data.tracks.items.length; i++) {
-            if (data.tracks.items[i].name === value) {
+            if (data.tracks.items[i].name === song) {
                 for (var a=0; a < data.tracks.items[i].artists.length; a++) {
                     artists = data.tracks.items[i].artists[a].name;
                 }
@@ -85,7 +87,7 @@ function spotifythissong(value) {
                 console.log("Preview URL: "+previewUrl);
                 console.log("Album: "+album);
                 console.log("----------------------------"+'\n');
-            } else if(data.tracks.items[i].name !== value){
+            } else if(data.tracks.items[i].name !== song){
                 
             }
         }
@@ -132,20 +134,14 @@ function doWhatItSays() {
         fs.readFile("random.txt", "utf8", function(err,data){
     
         // Break the string down by comma separation and store the contents into the output array.
-        var output = data.split(',');
-
-        // Loop Through the newly created output array 
-        for (var i=0; i<output.length; i++){
-
-        // Print each element (item) of the array/ 
-        //console.log(output[i]);
-
-        action = output[0];
+        var output = data.toString().split(',');
+   
         value = output[1];
-
-        return action;
-        return value;
-        
+                
+        if(output[0] == 'spotify-this-song') {
+            
+            spotifythissong(value);
         }
+        
        });   
 }
