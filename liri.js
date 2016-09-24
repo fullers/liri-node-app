@@ -31,7 +31,7 @@ switch(action){
     break;
 
     case 'movie-this':
-        movieThis();
+        movieThis(value);
     break;
 
     case 'do-what-it-says':
@@ -39,7 +39,7 @@ switch(action){
     break;
 }
 
-function mytweets() {
+function mytweets(userName) {
 
     // Require keys.js to load keys for Twitter
     var keys = require('./keys.js');
@@ -95,16 +95,16 @@ function spotifythissong(song) {
 
 }
 
-function movieThis() {
+function movieThis(title) {
 
- if(value == null) {
+ if(title == null) {
 
-        value = "Mr Nobody";
+        title = "Mr Nobody";
 
     }
 
     // Then run a request to the OMDB API with the movie specified
-    request('http://www.omdbapi.com/?t='+value+'&y=&plot=short&tomatoes=true&r=json', function (error, response, body) {
+    request('http://www.omdbapi.com/?t='+title+'&y=&plot=short&tomatoes=true&r=json', function (error, response, body) {
 
     // If the request is successful (i.e. if the response status code is 200)
     if (!error && response.statusCode == 200) {
@@ -137,10 +137,18 @@ function doWhatItSays() {
         var output = data.toString().split(',');
    
         value = output[1];
-                
+        
+        if(output[0] == 'my-tweets') {
+            mytweets();
+        }        
+        
         if(output[0] == 'spotify-this-song') {
             
             spotifythissong(value);
+        }
+        if (output[0] == 'movie-this') {
+
+            movieThis(value);
         }
         
        });   
