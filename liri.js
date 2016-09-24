@@ -17,8 +17,6 @@ var spotify = require('spotify');
 var action = process.argv[2];
 var value = process.argv[3];
 
-var temp = [];
-
 // We will then create a switch-case statement (if-then would also work).
 // The switch-case will direct which function gets run.
 switch(action){
@@ -137,7 +135,7 @@ function doWhatItSays() {
         var output = data.toString().split(',');
    
         value = output[1];
-        
+
         if(output[0] == 'my-tweets') {
             mytweets();
         }        
